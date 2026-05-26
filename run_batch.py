@@ -79,7 +79,22 @@ if __name__ == "__main__":
         "https://practice-automation.com/form-fields/",
         "https://demoqa.com/automation-practice-form",
         "https://compendiumdev.co.uk/selenium/testpages/html5_form_test.html",
-        "https://the-internet.herokuapp.com/login"
+        "https://the-internet.herokuapp.com/login",
+        "https://selectorshub.com/xpath-practice-page/",
+        "https://automationteststore.com/index.php?rt=account/login",
+        "https://katalon-demo-cura.herokuapp.com/profile.php#login",
+        "https://computer-database.gatling.io/computers/new",
+        "https://magento.softwaretestingboard.com/customer/account/create/",
+        "https://www.saucedemo.com/",
+        "https://rahulshettyacademy.com/angularpractice/",
+        "https://parabank.parasoft.com/parabank/register.htm",
+        "https://blazedemo.com/login",
+        "https://demo.guru99.com/test/newtours/register.php",
+        "https://formy-project.herokuapp.com/form",
+        "https://www.techlistic.com/p/selenium-practice-form.html",
+        "https://ecommerce-playground.lambdatest.io/index.php?route=account/register",
+        "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+        "https://demo.applitools.com/"
     ]
 
     run_queue(test_queue)
