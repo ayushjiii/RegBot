@@ -168,6 +168,12 @@ class FormSession(Base):
         Index("ix_fs_created_at", "created_at"),
     )
 
+class BlacklistedDomain(Base):
+    __tablename__ = "blacklisted_domains"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    domain = Column(String(255), unique=True, nullable=False)
+    reason = Column(Text)
+
     def to_dict(self) -> dict:
         return {
             "session_id": self.id,

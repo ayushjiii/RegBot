@@ -410,10 +410,12 @@ def execute_form_filler_agent(profile_id: int, target_url: str, headless: bool =
                     except Exception as e:
                         log.warning(f"Failed to click submit: {e}")
 
-                if submitted:
-                    final_status = "SUCCESS"
-                elif any(fid in captcha_forms for fid in filled_forms):
+                if has_captcha:
                     final_status = "CAPTCHA_ERROR"
+                    if submitted:
+                        log.info("Safe form submitted, but flagging CAPTCHA_ERROR for the remaining forms.")
+                elif submitted:
+                    final_status = "SUCCESS"
                 else:
                     final_status = "PARTIAL"
 
