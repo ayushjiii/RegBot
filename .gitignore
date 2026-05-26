@@ -1,0 +1,23 @@
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# Databases
+*.db
+*.sqlite3
+agent_vault.db
+agent_vault.db-wal
+agent_vault.db-shm
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# IDEs and Tools
+.idea/
+.junie/
+
+# Project specific
+screenshots/
