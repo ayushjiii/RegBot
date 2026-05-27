@@ -7,7 +7,6 @@ import logging
 import base64
 from datetime import datetime, timezone
 from urllib.parse import urlparse
-from typing import Optional
 
 from dotenv import load_dotenv, find_dotenv
 from playwright.sync_api import sync_playwright, Page, Frame, ElementHandle

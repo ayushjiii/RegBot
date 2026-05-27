@@ -41,26 +41,27 @@ def ask_brain_to_map_fields(domain, scraped_fields, profile_keys):
     print(f"Cache miss for {len(unmapped_fields)} fields. Invoking Gemini API...")
 
     prompt = f"""
-    You are an RPA data mapper. Map the WEBPAGE FIELDS to the DATABASE KEYS.
+        You are an RPA data mapper. Map the WEBPAGE FIELDS to the DATABASE KEYS.
 
-    DATABASE KEYS AVAILABLE:
-    {json.dumps(profile_keys, indent=2)}
+        DATABASE KEYS AVAILABLE:
+        {json.dumps(profile_keys, indent=2)}
 
-    WEBPAGE FIELDS TO MAP:
-    {json.dumps(unmapped_fields, indent=2)}
+        WEBPAGE FIELDS TO MAP:
+        {json.dumps(unmapped_fields, indent=2)}
 
-    INSTRUCTIONS:
-    1. Keys: Left side must be the exact "placeholder" string from WEBPAGE FIELDS.
-    2. Values: Right side must be the exact string from DATABASE KEYS.
-    3. Genders & Checkboxes: Output "GENERATED_TEXT: True" or "GENERATED_TEXT: False".
-    4. Dropdowns: Pick the best option from the 'options' list and output "GENERATED_TEXT: [choice]".
-    5. Unmappable fields (dates, etc): Output "GENERATED_TEXT: [realistic value]".
-    6. Never map a field to its own placeholder name. Do not use null.
-    """
+        INSTRUCTIONS:
+        1. Keys: Left side must be the exact "placeholder" string from WEBPAGE FIELDS.
+        2. Values: Right side must be the exact string from DATABASE KEYS.
+        3. Genders & Checkboxes: Output "GENERATED_TEXT: True" or "GENERATED_TEXT: False".
+        4. Dropdowns: Pick the best option from the 'options' list and output "GENERATED_TEXT: [choice]".
+        5. Unmappable fields (dates, etc): Output "GENERATED_TEXT: [realistic value]".
+        6. Never map a field to its own placeholder name. Do not use null.
+        7. CRITICAL: Output ONLY a single JSON dictionary object. Do NOT wrap the output in a list [].
+        """
 
     try:
         response = client.models.generate_content(
-            model='gemini-2.5-flash-lite',
+            model='gemini-3.1-flash-lite',
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
@@ -70,6 +71,13 @@ def ask_brain_to_map_fields(domain, scraped_fields, profile_keys):
         )
 
         ai_mapping = json.loads(response.text)
+
+        # BOUNTY FIX: If the AI hallucinates and wraps the dict in a list, unwrap it.
+        if isinstance(ai_mapping, list):
+            if len(ai_mapping) > 0 and isinstance(ai_mapping[0], dict):
+                ai_mapping = ai_mapping[0]
+            else:
+                raise ValueError("AI returned a malformed list instead of a mapping dictionary.")
 
         for placeholder, decision in ai_mapping.items():
             if not decision or str(decision).strip().lower() == "null":
